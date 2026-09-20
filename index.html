@@ -1,0 +1,121 @@
+<!doctype html><html><head>
+<meta charset="utf-8"><meta http-equiv="Cache-Control" content="no-store"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Week 2 Live — Carter vs Walker</title>
+<style>
+:root{--bg:#FAFAF9;--surface:#FFF;--ink:#1B1F24;--muted:#67707A;--line:#E8E6E2;
+--green:#15803D;--green-soft:#E9F4EC;--rust:#B45309;--rust-soft:#FBEFE2;--amber:#A16207;
+--amber-soft:#FDF3D8;--blue:#1D4ED8;--live:#DC2626;--red:#C22B21;--red-soft:#FCE5E2}
+@media(prefers-color-scheme:dark){:root{--bg:#131519;--surface:#1B1E24;--ink:#E8EAED;--muted:#9AA3AD;
+--line:#2A2E35;--green:#2EA366;--green-soft:#1B2B22;--rust:#D98324;--rust-soft:#2E2419;
+--amber:#D9A62E;--amber-soft:#2D2716;--blue:#7BA0F5;--live:#F87171;--red:#F27B72;--red-soft:#331A17}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);
+font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:24px 16px 60px}
+h1{font-size:19px;font-weight:650;margin:0}
+.sub{color:var(--muted);font-size:12.5px;margin-top:3px}
+.tiles{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:16px 0}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.tl{font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.tn{font-size:21px;font-weight:650;font-variant-numeric:tabular-nums}
+.ts{font-size:11.5px;color:var(--muted)}
+.g{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);
+border-radius:10px;padding:10px 12px;margin-bottom:8px}
+.g.nopick{opacity:.6}
+.score{min-width:150px}
+.t{display:flex;align-items:center;font-weight:600;font-size:14px;font-variant-numeric:tabular-nums}
+.t .nm{width:40px}.t .pts{width:30px;text-align:right}.t .ball{width:24px;font-size:12px;padding-left:6px}
+.t .pts{font-weight:650}
+.st{font-size:11px;color:var(--muted);margin-top:2px}
+.st.live{font-weight:600}.st.live .dot{color:var(--live)}
+.picks{flex:1;display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.pk{font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:99px;white-space:nowrap;
+border:1px solid var(--line);color:var(--muted)}
+.pk.cover{background:var(--green-soft);color:var(--green);border-color:transparent}
+.pk.behind{background:var(--red-soft);color:var(--red);border-color:transparent}
+.pk.push{background:var(--amber-soft);color:var(--amber);border-color:transparent}
+.foot{font-size:12px;color:var(--muted);margin-top:16px}
+.err{color:var(--rust);font-size:12.5px;margin:8px 0}
+</style></head><body><div class="wrap">
+<h1>Week 2 Live — Carter vs Walker</h1>
+<div class="sub" id="upd">loading scores…</div>
+<div class="tiles" id="tiles"></div>
+<div id="games"></div>
+<div class="foot">Cover status is live and provisional until final. CZ chips = Carter, WZ = Walker. Auto-refreshes every 30s from ESPN. MNF tiebreaker: Carter 44, Walker 47 (NYG@LA).</div>
+<div class="err" id="err"></div>
+</div>
+<script>
+// line = points HOME is favored by (negative = home dog). cz = Carter, wz = opponent.
+const GAMES=[{"away": "DET", "home": "BUF", "line": 4.5, "kick": "Thu 8:15PM ET"}, {"away": "CAR", "home": "ATL", "line": -2.5, "kick": "Sun 1:00PM ET"}, {"away": "CIN", "home": "HOU", "line": 3.0, "kick": "Sun 1:00PM ET"}, {"away": "CLE", "home": "TB", "line": 8.5, "kick": "Sun 1:00PM ET", "cz": {"side": "TB"}, "wz": {"side": "TB", "pts": 2}}, {"away": "GB", "home": "NYJ", "line": -3.5, "kick": "Sun 1:00PM ET", "wz": {"side": "GB"}}, {"away": "MIN", "home": "CHI", "line": 4.5, "kick": "Sun 1:00PM ET", "cz": {"side": "MIN", "pts": 4, "tb": 1}, "wz": {"side": "CHI"}}, {"away": "NO", "home": "BAL", "line": 8.5, "kick": "Sun 1:00PM ET", "cz": {"side": "BAL", "pts": 2}, "wz": {"side": "BAL"}}, {"away": "PHI", "home": "TEN", "line": -7.0, "kick": "Sun 1:00PM ET", "cz": {"side": "TEN"}, "wz": {"side": "PHI", "pts": 4, "tb": 1}}, {"away": "PIT", "home": "NE", "line": 5.5, "kick": "Sun 1:00PM ET", "cz": {"side": "PIT"}, "wz": {"side": "NE"}}, {"away": "JAX", "home": "DEN", "line": 2.5, "kick": "Sun 4:05PM ET"}, {"away": "LV", "home": "LAC", "line": 6.5, "kick": "Sun 4:05PM ET", "cz": {"side": "LV"}, "wz": {"side": "LAC"}}, {"away": "MIA", "home": "SF", "line": 13.5, "kick": "Sun 4:25PM ET", "cz": {"side": "MIA"}, "wz": {"side": "SF", "pts": 4, "tb": 1}}, {"away": "SEA", "home": "ARI", "line": -3.5, "kick": "Sun 4:25PM ET", "cz": {"side": "SEA"}}, {"away": "WAS", "home": "DAL", "line": 4.5, "kick": "Sun 4:25PM ET", "cz": {"side": "WAS", "pts": 4, "tb": 1}, "wz": {"side": "DAL"}}, {"away": "IND", "home": "KC", "line": 6.5, "kick": "Sun 8:20PM ET", "wz": {"side": "KC"}}, {"away": "NYG", "home": "LA", "line": 7.0, "kick": "Mon 8:15PM ET", "cz": {"side": "NYG"}}];
+const CFG={"season": 2026, "week": 2, "hasOpp": true, "oppName": "Walker", "oppShort": "WZ"};
+const ALIAS={WSH:"WAS",LAR:"LA",JAC:"JAX"};
+const URL_="https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?seasontype=2&week="+CFG.week+"&dates="+CFG.season;
+function coverState(g,side,hs,as,final){
+  const m=hs-as, edge=(side===g.home)?(m-g.line):(g.line-m);
+  if(edge>0)return final?"win":"cover"; if(edge<0)return final?"loss":"behind"; return "push";
+}
+function tile(label,num,sub,id){return `<div class="tile"><div class="tl">${label}</div><div class="tn" id="${id}-n">${num}</div><div class="ts" id="${id}-s">${sub}</div></div>`;}
+document.getElementById("tiles").innerHTML = CFG.hasOpp
+  ? tile("Carter — if held","–","","cz")+tile(CFG.oppName+" — if held","–","","wz")+tile("Head-to-head","–","opposite-side games","h2h")
+  : tile("Carter — if held","–","","cz")+tile("Points if held","–","","pts")+tile("Pending","–","picks not yet started","pend");
+async function tick(){
+  try{
+    const d=await fetch(URL_).then(r=>r.json());
+    const emap={};
+    for(const e of d.events||[]){
+      const c=e.competitions[0], t={};
+      for(const x of c.competitors) t[x.homeAway]=x;
+      const h=ALIAS[t.home.team.abbreviation]||t.home.team.abbreviation;
+      const a=ALIAS[t.away.team.abbreviation]||t.away.team.abbreviation;
+      const sit=c.situation||{};
+      const pos=String(sit.possession)===String(t.home.id)?"home":(String(sit.possession)===String(t.away.id)?"away":"");
+      emap[a+"@"+h]={hs:+t.home.score||0,as:+t.away.score||0,
+        state:c.status.type.state, det:c.status.type.shortDetail,
+        pos:pos, dd:sit.downDistanceText||""};
+    }
+    let czW=0,czL=0,czP=0,czPend=0,czBank=0,czRisk=0,wzW=0,wzL=0,wzBank=0,wzRisk=0,h2hC=0,h2hW=0;
+    let html="";
+    for(const g of GAMES){
+      const e=emap[g.away+"@"+g.home]||{hs:0,as:0,state:"pre",det:g.kick||"—",pos:"",dd:""};
+      const final=e.state==="post", live=e.state==="in";
+      let chips="";
+      for(const [who,p] of [["CZ",g.cz],[CFG.oppShort,g.wz]]){
+        if(!p)continue;
+        let cls="",txt=p.side+(p.pts?" ·"+p.pts:"")+(p.tb?" ·Tie":"");
+        if(live||final){
+          const s=coverState(g,p.side,e.hs,e.as,final);
+          cls=(s==="cover"||s==="win")?"cover":(s==="push")?"push":"behind";
+          const w=(s==="win"||s==="cover"), l=(s==="loss"||s==="behind");
+          if(who==="CZ"){czRisk+=p.pts||0;if(w){czW++;czBank+=p.pts||0}else if(l)czL++;else czP++;}
+          else{wzRisk+=p.pts||0;if(w){wzW++;wzBank+=p.pts||0}else if(l)wzL++;}
+        } else if(who==="CZ") czPend++;
+        chips+=`<span class="pk ${cls}">${who} ${txt}</span>`;
+      }
+      if((final||live)&&g.cz&&g.wz&&g.cz.side!==g.wz.side){
+        h2hC+=["win","cover"].includes(coverState(g,g.cz.side,e.hs,e.as,final))?1:0;
+        h2hW+=["win","cover"].includes(coverState(g,g.wz.side,e.hs,e.as,final))?1:0;
+      }
+      const fav=g.line>0?g.home+" -"+g.line.toFixed(1):g.away+" -"+Math.abs(g.line).toFixed(1);
+      html+=`<div class="g ${(g.cz||g.wz)?"":"nopick"}"><div class="score">
+        <div class="t"><span class="nm">${g.away}</span><span class="pts">${e.state==="pre"?"":e.as}</span><span class="ball">${live&&e.pos==="away"?"🏈":""}</span></div>
+        <div class="t"><span class="nm">${g.home}</span><span class="pts">${e.state==="pre"?"":e.hs}</span><span class="ball">${live&&e.pos==="home"?"🏈":""}</span></div>
+        <div class="st ${live?"live":""}">${live?'<span class="dot">●</span> ':""}${e.det} &middot; pool ${fav}${live&&e.dd?" &middot; "+e.dd:""}</div></div>
+        <div class="picks">${chips}</div></div>`;
+    }
+    document.getElementById("games").innerHTML=html;
+    document.getElementById("cz-n").textContent=czW+"-"+czL+(czP?"-"+czP:"");
+    document.getElementById("cz-s").textContent="pts if held: "+czBank+"/"+czRisk+" risked";
+    if(CFG.hasOpp){
+      document.getElementById("wz-n").textContent=wzW+"-"+wzL;
+      document.getElementById("wz-s").textContent="pts if held: "+wzBank+"/"+wzRisk+" risked";
+      document.getElementById("h2h-n").textContent=h2hC+"-"+h2hW;
+    } else {
+      document.getElementById("pts-n").textContent=czBank+" / 10";
+      document.getElementById("pts-s").textContent=czRisk+" pts in play so far";
+      document.getElementById("pend-n").textContent=czPend;
+    }
+    document.getElementById("upd").textContent="updated "+new Date().toLocaleTimeString()+" · refreshes every 30s";
+    document.getElementById("err").textContent="";
+  }catch(ex){document.getElementById("err").textContent="score fetch failed ("+ex.message+") — retrying…";}
+}
+tick();setInterval(tick,30000);
+</script></body></html>
