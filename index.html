@@ -2,78 +2,56 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="color-scheme" content="light dark">
 <meta http-equiv="Cache-Control" content="no-store"><title>Pick'em HQ</title><style>:root{--bg:#FAFAF9;--surface:#FFF;--ink:#1B1F24;--muted:#67707A;--line:#E8E6E2;--soft:#F4F3F0;
 --green:#15803D;--green-soft:#E9F4EC;--rust:#B45309;--rust-soft:#FBEFE2;--amber:#A16207;--amber-soft:#FDF3D8;
---blue:#1D4ED8;--blue-soft:#E8EEFC;--red:#B3403A;--red-soft:#FCE5E2;--shadow:0 1px 2px rgba(20,24,28,.05),0 4px 16px rgba(20,24,28,.04)}
+--blue:#1D4ED8;--blue-soft:#E8EEFC;--loss:#B3403A;--shadow:0 1px 2px rgba(20,24,28,.05),0 4px 16px rgba(20,24,28,.04)}
 @media (prefers-color-scheme:dark){:root{--bg:#131519;--surface:#1B1E24;--ink:#E8EAED;--muted:#9AA3AD;--line:#2A2E35;--soft:#22262D;
 --green:#2EA366;--green-soft:#1B2B22;--rust:#D98324;--rust-soft:#2E2419;--amber:#D9A62E;--amber-soft:#2D2716;
---blue:#7BA0F5;--blue-soft:#1C2333;--red:#D96A5F;--red-soft:#331A17;--shadow:none}}
+--blue:#7BA0F5;--blue-soft:#1C2333;--loss:#D96A5F;--shadow:none}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-text-size-adjust:100%}
-.wrap{max-width:840px;margin:0 auto;padding:18px 16px 56px}
-.hero{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:6px 0 14px}
-.hero h1{font-size:26px;font-weight:700;letter-spacing:-.015em;margin:0;line-height:1.1}
+.wrap{max-width:840px;margin:0 auto;padding:28px 20px 64px}
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap}
+header h1{font-size:22px;font-weight:650;letter-spacing:-.01em;margin:0}
 .sub{color:var(--muted);font-size:13px;margin-top:4px}
-.pill{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:99px;vertical-align:middle;margin-left:8px}
-.pill.final{background:var(--green-soft);color:var(--green)}.pill.early{background:var(--blue-soft);color:var(--blue)}
-.pill.prov{background:var(--amber-soft);color:var(--amber)}.pill.none{background:var(--soft);color:var(--muted)}
-.lock{text-align:right}.lock .k{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
-.lock .v{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}
-.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0 0 16px}
-.tile{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:11px 13px;box-shadow:var(--shadow);min-width:0}
-.tl{font-size:10.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tn{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.25}
-.ts{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.up{color:var(--green)}.down{color:var(--red)}
-.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);margin-bottom:14px;overflow:hidden}
-.ph{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:14px 16px 10px;flex-wrap:wrap}
-.ph h2{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0}
-.ph .hint{font-size:12px;color:var(--muted)}
-.pk{display:grid;grid-template-columns:30px minmax(0,1fr) auto;align-items:center;gap:10px;padding:11px 16px;border-top:1px solid var(--line)}
-.pk .rn{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;text-align:center;background:var(--soft);border-radius:7px;padding:3px 0}
-.pk .gm{font-weight:650;font-size:15px}
-.pk .meta{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:1px}
-.pk .enter{display:flex;gap:5px;align-items:center;justify-content:flex-end;flex-wrap:wrap}
-.tok{font:700 15px ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--green-soft);color:var(--green);padding:4px 9px;border-radius:7px}
-.b{font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:99px;white-space:nowrap}
-.b.x{background:var(--ink);color:var(--bg)}.b.p{background:var(--amber-soft);color:var(--amber)}
-.b.mv{background:var(--blue-soft);color:var(--blue);font-weight:600;padding:1px 7px}
-.pk .meta .mb{display:none;gap:4px}
-.pk.star{background:linear-gradient(90deg,var(--amber-soft),transparent 55%)}
-.mnp{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;border-top:1px solid var(--line);background:var(--soft)}
-.mnp .k{font-size:13px;color:var(--muted)}.mnp .k b{color:var(--ink)}
-.mnp .v{font:700 20px ui-monospace,SFMono-Regular,Menlo,monospace}
-details.skip{border-top:1px solid var(--line)}
-details.skip summary{cursor:pointer;padding:11px 16px;font-size:13px;font-weight:600;color:var(--muted);list-style:none}
-details.skip summary::-webkit-details-marker{display:none}
-details.skip summary::after{content:" ▾"}details.skip[open] summary::after{content:" ▴"}
-.sk{display:flex;justify-content:space-between;gap:10px;padding:7px 16px 7px 56px;font-size:13.5px;color:var(--muted);border-top:1px dashed var(--line)}
-.ok{font-size:12.5px;color:var(--green);padding:10px 16px;border-top:1px solid var(--line)}
-.ok.bad{color:var(--red);font-weight:600}
-.alert{display:flex;gap:10px;padding:11px 16px;border-top:1px solid var(--line);font-size:13.5px}
-.alert .ic{flex:none;width:22px;height:22px;border-radius:50%;background:var(--rust-soft);color:var(--rust);font-weight:800;display:grid;place-items:center;font-size:13px}
-.empty{padding:22px 16px;color:var(--muted);font-size:14px;border-top:1px solid var(--line)}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.two .panel{margin:0}
-.row{display:flex;justify-content:space-between;gap:10px;padding:9px 16px;border-top:1px solid var(--line);font-size:14px;font-variant-numeric:tabular-nums}
-.row .n{color:var(--muted)}.row.me{font-weight:700}.row.me .n{color:var(--ink)}
-.go{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
-.go a{display:block;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:13px 14px;color:inherit;text-decoration:none;box-shadow:var(--shadow)}
-.go a:hover{border-color:var(--muted)}
-.go b{display:block;font-size:15px}.go small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}
-.go a:focus-visible,summary:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.lock{font-size:13px;color:var(--muted);text-align:right}.lock b{color:var(--ink);font-variant-numeric:tabular-nums}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:16px 0 22px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;box-shadow:var(--shadow)}
+.tile-label{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.tile-num{font-size:24px;font-weight:650;font-variant-numeric:tabular-nums;margin-top:2px}
+.tile-num small{font-size:14px;color:var(--muted);font-weight:600}
+.tile-sub{font-size:12px;color:var(--muted)}
+.g{color:var(--green)}.r{color:var(--loss)}
+h2{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.links{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:22px}
+.lk{display:flex;flex-direction:column;gap:2px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;
+  box-shadow:var(--shadow);color:inherit;text-decoration:none;min-height:74px}
+.lk:hover{border-color:var(--muted)}
+.lk:focus-visible,.rt:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.lk b{font-size:14.5px;font-weight:600}
+.lk span{font-size:12px;color:var(--muted)}
+.lk.hot{background:var(--green-soft);border-color:transparent}.lk.hot span{color:var(--green)}
+.ext::after{content:" ↗";color:var(--muted);font-weight:400}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:16px;margin-bottom:14px}
+.ptop{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.ptop h2{margin:0}
+.rtabs{display:flex;gap:18px;border-bottom:1px solid var(--line)}
+.rt{font:600 14px/1 inherit;font-family:inherit;padding:8px 2px;color:var(--muted);background:none;border:0;border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer}
+.rt[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+.lad{margin-top:6px}
+.lr{display:grid;grid-template-columns:44px minmax(0,1fr) 64px 56px;gap:8px;align-items:center;padding:8px 6px;border-top:1px solid var(--line);font-size:14px;font-variant-numeric:tabular-nums}
+.lr.h{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-top:0;padding-top:2px}
+.lr .rk{color:var(--muted)}.lr .v{text-align:right;font-weight:650}.lr .gap{text-align:right;color:var(--muted);font-size:12.5px}
+.lr .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lr.me{background:var(--amber-soft);border-radius:8px;border-top-color:transparent;font-weight:650}.lr.me .rk{color:var(--amber)}
+.lr.rv .nm{color:var(--blue)}
+.cut{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--green);padding:4px 6px}
+.cut::before,.cut::after{content:"";flex:1;border-top:1px dashed var(--green)}
+.dots{text-align:center;color:var(--muted);font-size:13px;padding:2px 0;border-top:1px solid var(--line)}
+.hist{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.hc{font-size:12.5px;padding:6px 10px;border-radius:8px;border:1px solid var(--line);font-variant-numeric:tabular-nums}
+.hc b{font-weight:650}.hc small{color:var(--muted)}
 footer{margin-top:22px;font-size:12.5px;color:var(--muted)}
-footer a{color:var(--muted)}
-@media (max-width:640px){
- .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
- .two,.go{grid-template-columns:1fr}
- .two{gap:14px}
- .hero h1{font-size:23px}
- .pk{grid-template-columns:26px minmax(0,1fr) auto;gap:8px;padding:11px 12px}
- .sk{padding-left:46px;padding-right:12px}
- .pk .enter .b{display:none}
- .pk .meta .mb{display:inline-flex}
- .lock{text-align:left;display:flex;gap:8px;align-items:baseline}
- .ph,.mnp,.alert,.ok,.row,details.skip summary{padding-left:12px;padding-right:12px}
-}</style></head><body>
+@media (max-width:640px){.wrap{padding:20px 16px 56px}.links{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.lock{text-align:left}.lr{grid-template-columns:40px minmax(0,1fr) 58px 48px;padding:8px 4px}}</style></head><body>
 <style>
 .hqn,.hqn *{box-sizing:border-box;margin:0}
 .hqn{display:block;position:sticky;top:0;z-index:50;width:100%;background:rgba(250,250,249,.92);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
@@ -90,21 +68,24 @@ footer a{color:var(--muted)}
   .hqn a.t{color:#9AA3AD}.hqn a.t:hover{background:#22262D;color:#E8EAED}.hqn a.t.on{background:#E8EAED;color:#131519}}
 </style><div class="hqn" role="navigation" aria-label="Pick'em pages"><div class="hqn-in"><a class="hqn-brand" href="index.html">PICK<span>&rsquo;</span>EM</a><a class="t on" href="index.html" aria-current="page">Home</a><a class="t" href="war-room.html">War Room</a><a class="t" href="scoreboard.html">Pool</a><a class="t" href="live.html">Live</a></div></div>
 <div class="wrap">
-<div class="hero"><div><h1>Week 3<span class="pill early">Early final</span></h1>
-<div class="sub">The last update comes after inactives, ~11:35 ET · updated Sun Sep 27, 10:29 AM ET</div></div><div class="lock"><div class="k" id="lk-k">Picks due</div><div class="v" id="lk" data-lock="2026-09-27T12:00:00-04:00">Sun 12:00 PM ET</div></div></div>
-<div class="tiles"><div class="tile"><div class="tl">Season record</div><div class="tn">8-12</div><div class="ts">40% ATS</div></div><div class="tile"><div class="tl">Points banked</div><div class="tn">8</div><div class="ts">of 20 staked</div></div><div class="tile"><div class="tl">Pool wins rank</div><div class="tn">17<small style='font-size:13px;color:var(--muted)'> / 27</small></div><div class="ts">8 wins · 8 pts</div></div><div class="tile"><div class="tl">vs Walker</div><div class="tn"><span class="down">-1</span> W</div><div class="ts"><span class="down">-2</span> pts</div></div></div>
-<section class="panel" aria-labelledby="h-picks"><div class="ph"><h2 id="h-picks">Your picks · week 3</h2><span class="hint">Type the green code in column H · X in I · points in J · % = chance to cover</span></div><div class="pk"><div class="rn" title="Sheet row">3</div><div><div class="gm">CAR @ CLE</div><div class="meta"><span>CLE +2.5</span><span>· 54.0%</span><span class="b mv">line moved 1</span></div></div><div class="enter"><span class="tok" title="Type exactly this in column H">CLE</span></div></div><div class="pk"><div class="rn" title="Sheet row">4</div><div><div class="gm">HOU @ IND</div><div class="meta"><span>IND +2.5</span><span>· 51.5%</span><span class="b mv">line moved 1</span></div></div><div class="enter"><span class="tok" title="Type exactly this in column H">IND</span></div></div><div class="pk star"><div class="rn" title="Sheet row">5</div><div><div class="gm">KC @ MIA</div><div class="meta"><span>MIA +11.5</span><span class="mb"><span class="b x" title="Tiebreaker: X in column I">X</span><span class="b p" title="Points in column J">4 pts</span></span><span>· 63.5%</span><span class="b mv">line moved 2</span></div></div><div class="enter"><span class="b x" title="Tiebreaker: X in column I">X</span><span class="b p" title="Points in column J">4 pts</span><span class="tok" title="Type exactly this in column H">MIA</span></div></div><div class="pk star"><div class="rn" title="Sheet row">8</div><div><div class="gm">SEA @ WAS</div><div class="meta"><span>SEA -7</span><span class="mb"><span class="b x" title="Tiebreaker: X in column I">X</span><span class="b p" title="Points in column J">4 pts</span></span><span>· 54.2%</span><span class="b mv">line moved 1.5</span></div></div><div class="enter"><span class="b x" title="Tiebreaker: X in column I">X</span><span class="b p" title="Points in column J">4 pts</span><span class="tok" title="Type exactly this in column H">sea</span></div></div><div class="pk"><div class="rn" title="Sheet row">10</div><div><div class="gm">NE @ JAC</div><div class="meta"><span>NE +3</span><span>· 52.0%</span></div></div><div class="enter"><span class="tok" title="Type exactly this in column H">ne</span></div></div><div class="pk star"><div class="rn" title="Sheet row">11</div><div><div class="gm">ARI @ SF</div><div class="meta"><span>ARI +8.5</span><span class="mb"><span class="b p" title="Points in column J">2 pts</span></span><span>· 55.9%</span><span class="b mv">line moved 1</span></div></div><div class="enter"><span class="b p" title="Points in column J">2 pts</span><span class="tok" title="Type exactly this in column H">ari</span></div></div><div class="pk"><div class="rn" title="Sheet row">12</div><div><div class="gm">MIN @ TB</div><div class="meta"><span>TB +1.5</span><span>· 52.6%</span></div></div><div class="enter"><span class="tok" title="Type exactly this in column H">TB</span></div></div><div class="pk"><div class="rn" title="Sheet row">14</div><div><div class="gm">LV @ NO</div><div class="meta"><span>LV +3</span><span>· 52.5%</span></div></div><div class="enter"><span class="tok" title="Type exactly this in column H">lv</span></div></div><div class="pk"><div class="rn" title="Sheet row">15</div><div><div class="gm">LAR @ DEN</div><div class="meta"><span>DEN +2.5</span><span>· 52.9%</span><span class="b mv">line moved 1</span></div></div><div class="enter"><span class="tok" title="Type exactly this in column H">DEN</span></div></div><div class="pk"><div class="rn" title="Sheet row">16</div><div><div class="gm">PHI @ CHI</div><div class="meta"><span>CHI +4.5</span><span>· 53.2%</span><span class="b mv">line moved 1</span></div></div><div class="enter"><span class="tok" title="Type exactly this in column H">CHI</span></div></div><div class="mnp"><div class="k"><b>Monday-night points</b> · last row of the sheet</div><div class="v">40</div></div><details class="skip"><summary>Not picking (6)</summary><div class="sk"><span>1. ATL @ GB</span><span>locked — kicks off before the deadline</span></div><div class="sk"><span>2. CIN @ PIT</span><span>skip</span></div><div class="sk"><span>6. LAC @ BUF</span><span>skip</span></div><div class="sk"><span>7. NYJ @ DET</span><span>skip</span></div><div class="sk"><span>9. TEN @ NYG</span><span>skip</span></div><div class="sk"><span>13. BAL @ DAL</span><span>skip</span></div></details><div class="ok">✓ All checks passed: 10 picks, all Sunday/Monday games, 2 tiebreakers at 4 pts + one 2-pt game.</div></section>
-
-<div class="two"><section class="panel"><div class="ph"><h2>Our weeks</h2><a class="hint" href="war-room.html">War Room →</a></div><div class="row"><span class="n">Week 2</span><span>4-6</span></div><div class="row"><span class="n">Week 1</span><span>4-6</span></div></section><section class="panel"><div class="ph"><h2>Pool standings</h2><a class="hint" href="scoreboard.html">Pool board →</a></div><div class="row"><span class="n">1. Dmiller</span><span>12 W · 16 pts</span></div><div class="row"><span class="n">1. BHanes-Atl</span><span>12 W · 14 pts</span></div><div class="row"><span class="n">1. Creardon</span><span>12 W · 11 pts</span></div><div class="row"><span class="n">4. Rvictor - GVL</span><span>11 W · 18 pts</span></div><div class="row"><span class="n">4. Rbaughman - GVL</span><span>11 W · 7 pts</span></div><div class="row"><span class="n">12. Walker</span><span>9 W · 10 pts</span></div><div class="row me"><span class="n">17. You</span><span>8 W · 8 pts</span></div></section></div>
-<div class="go"><a href="war-room.html"><b>War Room</b><small>Every game's analysis, factors &amp; injuries</small></a>
-<a href="scoreboard.html"><b>Pool board</b><small>Everyone's picks, week &amp; season races</small></a>
-<a href="live.html"><b>Live scores</b><small>Game day: are your picks covering?</small></a></div>
-<footer>Runs on GitHub · Wed preview, Sat refresh, Sun final · <a href="https://github.com/thecarterzim/pickem-engine/issues/1">bot notifications</a> ·
-<a href="https://github.com/thecarterzim/pickem-engine/actions/workflows/pickem.yml">run a job now</a></footer>
+<header><div><h1>Pick&rsquo;em HQ</h1><div class="sub">2026 season · pool graded through week 2 · updated Sun Sep 27, 10:42 AM ET</div></div><div class="lock">Week 3 picks due · <b id="lk" data-lock="2026-09-27T12:00:00-04:00">Sun noon ET</b></div></header>
+<div class="tiles"><div class="tile"><div class="tile-label">Wins rank</div><div class="tile-num">T-17<small> / 27</small></div><div class="tile-sub">8 wins · 4 off top 2</div></div><div class="tile"><div class="tile-label">Points rank</div><div class="tile-num">T-16<small> / 27</small></div><div class="tile-sub">8 pts · 6 off top 4</div></div><div class="tile"><div class="tile-label">vs Walker</div><div class="tile-num"><span class="r">-1</span><small> wins</small></div><div class="tile-sub"><span class="r">-2</span> pts · Walker 9 W, 10 pts</div></div><div class="tile"><div class="tile-label">Week 2</div><div class="tile-num">4-6<small> · T-11</small></div><div class="tile-sub">4 pts · winner 8-2</div></div></div>
+<h2>Quick links</h2>
+<nav class="links" aria-label="Quick links"><a class="lk hot" href="war-room.html#2026/w3"><b class="">Week 3 picks</b><span>Engine board · Early final</span></a><a class="lk" href="live.html"><b class="">Live scores</b><span>Game day: are picks covering?</span></a><a class="lk" href="scoreboard.html"><b class="">Pool board</b><span>Everyone&#x27;s picks &amp; races</span></a><a class="lk" href="war-room.html"><b class="">War Room</b><span>Analysis, trends, backtest</span></a><a class="lk" href="https://docs.google.com/spreadsheets/d/1RB4SHVrrgBlX3fC8TWX9E_Km0NqhPwYYiSLRIAqadBo" target=_blank rel=noopener><b class="ext">My pick sheet</b><span>Enter picks here</span></a><a class="lk" href="https://docs.google.com/spreadsheets/d/1wVpwexLcsYhKbLwSKUkznTdjKL7csxhOwp268OfIv0w" target=_blank rel=noopener><b class="ext">Master sheet</b><span>Commissioner&#x27;s, week 2</span></a><a class="lk" href="https://github.com/thecarterzim/pickem-engine/issues/1" target=_blank rel=noopener><b class="ext">Bot alerts</b><span>Every card &amp; result</span></a><a class="lk" href="https://github.com/thecarterzim/pickem-engine/actions/workflows/pickem.yml" target=_blank rel=noopener><b class="ext">Run a job</b><span>If a run is late</span></a></nav>
+<section class="panel"><div class="ptop"><h2>Season race</h2>
+<div class="rtabs" role="tablist"><button class="rt" role="tab" aria-selected="true" data-k="w">Wins</button><button class="rt" role="tab" aria-selected="false" data-k="p">Points</button></div></div>
+<div class="lad" data-k="w"><div class="lr h"><span>Rank</span><span>Player</span><span style="text-align:right">Wins</span><span style="text-align:right">Back</span></div><div class="lr"><span class="rk">T-1</span><span class="nm">BHanes-Atl</span><span class="v">12</span><span class="gap">—</span></div><div class="lr"><span class="rk">T-1</span><span class="nm">Creardon</span><span class="v">12</span><span class="gap">—</span></div><div class="lr"><span class="rk">T-1</span><span class="nm">Dmiller</span><span class="v">12</span><span class="gap">—</span></div><div class="cut">payout line · top 2</div><div class="lr"><span class="rk">T-4</span><span class="nm">JFarhat-Lex</span><span class="v">11</span><span class="gap">-1</span></div><div class="dots">···</div><div class="lr rv"><span class="rk">T-12</span><span class="nm">Walker</span><span class="v">9</span><span class="gap">-3</span></div><div class="lr"><span class="rk">T-17</span><span class="nm">CSadler</span><span class="v">8</span><span class="gap">-4</span></div><div class="lr me"><span class="rk">T-17</span><span class="nm">You</span><span class="v">8</span><span class="gap">-4</span></div><div class="lr"><span class="rk">T-17</span><span class="nm">GHeyer - Gvl</span><span class="v">8</span><span class="gap">-4</span></div><div class="lr"><span class="rk">T-17</span><span class="nm">RBroome - GVL</span><span class="v">8</span><span class="gap">-4</span></div></div>
+<div class="lad" data-k="p" hidden><div class="lr h"><span>Rank</span><span>Player</span><span style="text-align:right">Pts</span><span style="text-align:right">Back</span></div><div class="lr"><span class="rk">1</span><span class="nm">Rvictor - GVL</span><span class="v">18</span><span class="gap">—</span></div><div class="lr"><span class="rk">2</span><span class="nm">Dmiller</span><span class="v">16</span><span class="gap">-2</span></div><div class="lr"><span class="rk">T-3</span><span class="nm">BHanes-Atl</span><span class="v">14</span><span class="gap">-4</span></div><div class="lr"><span class="rk">T-3</span><span class="nm">Bbrading - GVL</span><span class="v">14</span><span class="gap">-4</span></div><div class="cut">payout line · top 4</div><div class="dots">···</div><div class="lr rv"><span class="rk">T-11</span><span class="nm">Walker</span><span class="v">10</span><span class="gap">-8</span></div><div class="lr"><span class="rk">15</span><span class="nm">JSadler-Aik</span><span class="v">9</span><span class="gap">-9</span></div><div class="lr"><span class="rk">T-16</span><span class="nm">Bmiller - CLT</span><span class="v">8</span><span class="gap">-10</span></div><div class="lr me"><span class="rk">T-16</span><span class="nm">You</span><span class="v">8</span><span class="gap">-10</span></div><div class="lr"><span class="rk">T-16</span><span class="nm">Dsmith - IRM</span><span class="v">8</span><span class="gap">-10</span></div><div class="lr"><span class="rk">T-16</span><span class="nm">GCollins</span><span class="v">8</span><span class="gap">-10</span></div></div>
+<div class="tile-sub" style="margin-top:10px">Season wins pays top 2; season points pays top 4. <a href="scoreboard.html" style="color:inherit">Full pool board →</a></div></section>
+<section class="panel"><h2>Your rank after each week</h2><div class="hist"><span class="hc">Wk 1 · <b>T-15</b> <small>wins</small> · <b>T-14</b> <small>pts</small></span><span class="hc">Wk 2 · <b>T-17</b> <small>wins</small> · <b>T-16</b> <small>pts</small></span></div></section>
+<footer>Runs on GitHub · Wed preview · Sat refresh · Sun final · Tue grading</footer>
 </div>
 <script>
+document.querySelectorAll('.rt').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.rt').forEach(x=>x.setAttribute('aria-selected',x===b));
+  document.querySelectorAll('.lad').forEach(l=>l.hidden=l.dataset.k!==b.dataset.k);}));
 (function(){var el=document.getElementById('lk');if(!el)return;var t=Date.parse(el.dataset.lock);if(!t)return;
-function tick(){var d=t-Date.now();if(d<=0){document.getElementById('lk-k').textContent='Picks';el.textContent='Locked';return;}
-var h=Math.floor(d/36e5),m=Math.floor(d%36e5/6e4);el.textContent=h>=48?Math.floor(h/24)+'d '+(h%24)+'h':h>0?h+'h '+m+'m':m+'m';}
+function tick(){var d=t-Date.now();if(d<=0){el.textContent='locked';return;}
+var h=Math.floor(d/36e5),m=Math.floor(d%36e5/6e4);el.textContent=h>=48?'in '+Math.floor(h/24)+'d '+(h%24)+'h':h>0?'in '+h+'h '+m+'m':'in '+m+'m';}
 tick();setInterval(tick,30000);})();
 </script></body></html>
