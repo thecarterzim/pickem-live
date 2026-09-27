@@ -1,4 +1,4 @@
-<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><meta charset="utf-8">
 <title>Pick'em Pool Board</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -96,7 +96,21 @@ footer{margin-top:28px;font-size:12.5px;color:var(--muted);max-width:62ch}
 @media (max-width:480px){.prow,.bhead{grid-template-columns:24px 1fr 56px 38px 16px;gap:6px}.picks{padding-left:12px}h1{font-size:26px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
-<div class="wrap">
+<style>
+.hqn,.hqn *{box-sizing:border-box;margin:0}
+.hqn{display:block;position:sticky;top:0;z-index:50;width:100%;background:rgba(250,250,249,.92);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  border-bottom:1px solid #E8E6E2;font:600 14px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+.hqn-in{max-width:840px;margin:0 auto;padding:0 12px;display:flex;align-items:center;gap:6px;height:48px}
+.hqn-brand{font-weight:750;letter-spacing:.02em;color:#1B1F24;text-decoration:none;margin-right:auto;white-space:nowrap}
+.hqn-brand span{color:#15803D}
+.hqn a.t{display:inline-block;color:#67707A;text-decoration:none;padding:8px 10px;border-radius:8px;white-space:nowrap;border:0;font:600 14px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;letter-spacing:0;text-transform:none}
+.hqn a.t:hover{background:#F0EFEC;color:#1B1F24}
+.hqn a.t.on{background:#1B1F24;color:#FAFAF9}
+.hqn a:focus-visible{outline:2px solid #1D4ED8;outline-offset:2px}
+@media (max-width:480px){.hqn-brand{display:none}.hqn-in{justify-content:space-between;gap:2px}.hqn a.t{flex:1;text-align:center;padding:9px 4px;font-size:13.5px}}
+@media (prefers-color-scheme:dark){.hqn{background:rgba(19,21,25,.92);border-color:#2A2E35}.hqn-brand{color:#E8EAED}.hqn-brand span{color:#2EA366}
+  .hqn a.t{color:#9AA3AD}.hqn a.t:hover{background:#22262D;color:#E8EAED}.hqn a.t.on{background:#E8EAED;color:#131519}}
+</style><div class="hqn" role="navigation" aria-label="Pick'em pages"><div class="hqn-in"><a class="hqn-brand" href="index.html">PICK<span>&rsquo;</span>EM</a><a class="t" href="index.html">Home</a><a class="t" href="war-room.html">War Room</a><a class="t on" href="scoreboard.html" aria-current="page">Pool</a><a class="t" href="live.html">Live</a></div></div><div class="wrap">
 <header><div><h1>Pick'em Pool Board</h1><div class="sub" id="sub"></div></div></header>
 <div class="tabs" role="tablist" id="tabs"></div>
 <main id="view"></main>
