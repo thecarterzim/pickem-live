@@ -256,7 +256,7 @@ function renderWeek(w){
       const dir=g.line_move>0?g.home:g.away;
       chips.push(`<span class="chip chip-move">line &rarr; ${dir} ${Math.abs(g.line_move).toFixed(1)}</span>`);}
     const qbInj=[...(g.injuries[g.away]||[]),...(g.injuries[g.home]||[])].some(x=>x.pos==='QB');
-    if(qbInj) chips.push('<span class="chip chip-qb">QB flag</span>');
+    if(qbInj) chips.push('<span class="chip chip-qb">QB inj</span>');
     if(g.result==='win') chips.push('<span class="chip chip-win">&#10003; covered</span>');
     if(g.result==='loss') chips.push('<span class="chip chip-loss">&#10007; missed</span>');
     const fav=g.pool_line>0?`${g.home} -${g.pool_line.toFixed(1)}`:`${g.away} -${Math.abs(g.pool_line).toFixed(1)}`;
