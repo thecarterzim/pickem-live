@@ -1,6 +1,6 @@
 <!doctype html><html><head>
 <meta charset="utf-8"><meta http-equiv="Cache-Control" content="no-store"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Week 3 Live — Carter vs Walker</title>
+<title>Week 4 Live — Carter vs Walker</title>
 <style>
 :root{--bg:#FAFAF9;--surface:#FFF;--ink:#1B1F24;--muted:#67707A;--line:#E8E6E2;
 --green:#15803D;--green-soft:#E9F4EC;--rust:#B45309;--rust-soft:#FBEFE2;--amber:#A16207;
@@ -50,17 +50,17 @@ border:1px solid var(--line);color:var(--muted)}
 @media (prefers-color-scheme:dark){.hqn{background:rgba(19,21,25,.92);border-color:#2A2E35}.hqn-brand{color:#E8EAED}.hqn-brand span{color:#2EA366}
   .hqn a.t{color:#9AA3AD}.hqn a.t:hover{background:#22262D;color:#E8EAED}.hqn a.t.on{background:#E8EAED;color:#131519}}
 </style><div class="hqn" role="navigation" aria-label="Pick'em pages"><div class="hqn-in"><a class="hqn-brand" href="index.html">PICK<span>&rsquo;</span>EM</a><a class="t" href="index.html">Home</a><a class="t" href="war-room.html">War Room</a><a class="t" href="scoreboard.html">Pool</a><a class="t on" href="live.html" aria-current="page">Live</a></div></div><div class="wrap">
-<h1>Week 3 Live — Carter vs Walker</h1>
+<h1>Week 4 Live — Carter vs Walker</h1>
 <div class="sub" id="upd">loading scores…</div>
 <div class="tiles" id="tiles"></div>
 <div id="games"></div>
-<div class="foot">Cover status is live and provisional until final. CZ chips = Carter, WZ = Walker. Auto-refreshes every 30s from ESPN. MNF tiebreaker: Carter 38, Walker 47 (PHI@CHI).</div>
+<div class="foot">Cover status is live and provisional until final. CZ chips = Carter, WZ = Walker. Auto-refreshes every 30s from ESPN. MNF tiebreaker: Carter 44, Walker 47 (ATL@NO).</div>
 <div class="err" id="err"></div>
 </div>
 <script>
 // line = points HOME is favored by (negative = home dog). cz = Carter, wz = opponent.
-const GAMES=[{"away": "ATL", "home": "GB", "line": 5.5, "kick": "Thu 8:15PM ET"}, {"away": "CAR", "home": "CLE", "line": -2.5, "kick": "Sun 1:00PM ET", "cz": {"side": "CLE"}, "wz": {"side": "CAR"}}, {"away": "CIN", "home": "PIT", "line": -3.5, "kick": "Sun 1:00PM ET", "wz": {"side": "CIN"}}, {"away": "HOU", "home": "IND", "line": -2.5, "kick": "Sun 1:00PM ET", "cz": {"side": "IND"}}, {"away": "KC", "home": "MIA", "line": -11.5, "kick": "Sun 1:00PM ET", "cz": {"side": "MIA", "pts": 4, "tb": 1}, "wz": {"side": "KC"}}, {"away": "LAC", "home": "BUF", "line": 7.0, "kick": "Sun 1:00PM ET"}, {"away": "NE", "home": "JAX", "line": 3.0, "kick": "Sun 1:00PM ET", "cz": {"side": "NE"}, "wz": {"side": "JAX"}}, {"away": "NYJ", "home": "DET", "line": 6.5, "kick": "Sun 1:00PM ET", "wz": {"side": "DET", "pts": 4, "tb": 1}}, {"away": "SEA", "home": "WAS", "line": -7.0, "kick": "Sun 1:00PM ET", "cz": {"side": "SEA", "pts": 4, "tb": 1}, "wz": {"side": "SEA"}}, {"away": "TEN", "home": "NYG", "line": 3.0, "kick": "Sun 1:00PM ET", "cz": {"side": "TEN"}, "wz": {"side": "NYG", "pts": 2}}, {"away": "ARI", "home": "SF", "line": 8.5, "kick": "Sun 4:05PM ET", "cz": {"side": "ARI", "pts": 2}, "wz": {"side": "SF", "pts": 4, "tb": 1}}, {"away": "MIN", "home": "TB", "line": -1.5, "kick": "Sun 4:05PM ET", "cz": {"side": "TB"}}, {"away": "BAL", "home": "DAL", "line": -3.5, "kick": "Sun 4:25PM ET"}, {"away": "LV", "home": "NO", "line": 3.0, "kick": "Sun 4:25PM ET", "cz": {"side": "LV"}}, {"away": "LA", "home": "DEN", "line": -2.5, "kick": "Sun 8:20PM ET", "cz": {"side": "DEN"}, "wz": {"side": "LA", "pts": 4}}, {"away": "PHI", "home": "CHI", "line": -4.5, "kick": "Mon 8:15PM ET", "wz": {"side": "PHI"}}];
-const CFG={"season": 2026, "week": 3, "hasOpp": true, "oppName": "Walker", "oppShort": "WZ"};
+const GAMES=[{"away": "PIT", "home": "CLE", "line": -2.5, "kick": "Thu 8:15PM ET"}, {"away": "IND", "home": "WAS", "line": -3.5, "kick": "Sun 9:30AM ET", "wz": {"side": "IND"}}, {"away": "ARI", "home": "NYG", "line": -2.5, "kick": "Sun 1:00PM ET", "wz": {"side": "ARI"}}, {"away": "DAL", "home": "HOU", "line": 3.0, "kick": "Sun 1:00PM ET", "cz": {"side": "DAL"}}, {"away": "GB", "home": "TB", "line": -3.5, "kick": "Sun 1:00PM ET", "cz": {"side": "TB"}}, {"away": "JAX", "home": "CIN", "line": 2.5, "kick": "Sun 1:00PM ET", "cz": {"side": "JAX"}}, {"away": "LA", "home": "PHI", "line": -3.0, "kick": "Sun 1:00PM ET", "wz": {"side": "LA"}}, {"away": "NE", "home": "BUF", "line": 6.5, "kick": "Sun 1:00PM ET", "cz": {"side": "NE", "pts": 2}, "wz": {"side": "BUF"}}, {"away": "NYJ", "home": "CHI", "line": 3.5, "kick": "Sun 1:00PM ET", "cz": {"side": "NYJ"}}, {"away": "TEN", "home": "BAL", "line": 11.5, "kick": "Sun 1:00PM ET", "wz": {"side": "BAL", "pts": 2}}, {"away": "MIA", "home": "MIN", "line": 10.5, "kick": "Sun 4:05PM ET", "cz": {"side": "MIA"}, "wz": {"side": "MIA"}}, {"away": "DEN", "home": "SF", "line": 3.0, "kick": "Sun 4:25PM ET", "cz": {"side": "DEN"}, "wz": {"side": "SF", "pts": 2, "tb": 1}}, {"away": "KC", "home": "LV", "line": -4.5, "kick": "Sun 4:25PM ET", "cz": {"side": "KC", "pts": 4, "tb": 1}, "wz": {"side": "KC", "pts": 2}}, {"away": "LAC", "home": "SEA", "line": 7.0, "kick": "Sun 4:25PM ET", "cz": {"side": "LAC"}, "wz": {"side": "LAC"}}, {"away": "DET", "home": "CAR", "line": -3.5, "kick": "Sun 8:20PM ET", "wz": {"side": "DET", "pts": 4, "tb": 1}}, {"away": "ATL", "home": "NO", "line": 2.5, "kick": "Mon 8:15PM ET", "cz": {"side": "ATL", "pts": 4, "tb": 1}}];
+const CFG={"season": 2026, "week": 4, "hasOpp": true, "oppName": "Walker", "oppShort": "WZ"};
 const ALIAS={WSH:"WAS",LAR:"LA",JAC:"JAX"};
 const URL_="https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?seasontype=2&week="+CFG.week+"&dates="+CFG.season;
 function coverState(g,side,hs,as,final){
