@@ -86,7 +86,7 @@ async function tick(){
         state:c.status.type.state, det:c.status.type.shortDetail,
         pos:pos, dd:sit.downDistanceText||""};
     }
-    let czW=0,czL=0,czP=0,czPend=0,czBank=0,czRisk=0,wzW=0,wzL=0,wzBank=0,wzRisk=0,h2hC=0,h2hW=0;
+    let czW=0,czL=0,czP=0,czPend=0,czBank=0,czRisk=0,wzW=0,wzL=0,wzP=0,wzBank=0,wzRisk=0,h2hC=0,h2hW=0;
     let html="";
     for(const g of GAMES){
       const e=emap[g.away+"@"+g.home]||{hs:0,as:0,state:"pre",det:g.kick||"—",pos:"",dd:""};
@@ -100,7 +100,7 @@ async function tick(){
           cls=(s==="cover"||s==="win")?"cover":(s==="push")?"push":"behind";
           const w=(s==="win"||s==="cover"), l=(s==="loss"||s==="behind");
           if(who==="CZ"){czRisk+=p.pts||0;if(w){czW++;czBank+=p.pts||0}else if(l)czL++;else czP++;}
-          else{wzRisk+=p.pts||0;if(w){wzW++;wzBank+=p.pts||0}else if(l)wzL++;}
+          else{wzRisk+=p.pts||0;if(w){wzW++;wzBank+=p.pts||0}else if(l)wzL++;else wzP++;}
         } else if(who==="CZ") czPend++;
         chips+=`<span class="pk ${cls}">${who} ${txt}</span>`;
       }
@@ -119,7 +119,7 @@ async function tick(){
     document.getElementById("cz-n").textContent=czW+"-"+czL+(czP?"-"+czP:"");
     document.getElementById("cz-s").textContent="pts if held: "+czBank+"/"+czRisk+" risked";
     if(CFG.hasOpp){
-      document.getElementById("wz-n").textContent=wzW+"-"+wzL;
+      document.getElementById("wz-n").textContent=wzW+"-"+wzL+(wzP?"-"+wzP:"");
       document.getElementById("wz-s").textContent="pts if held: "+wzBank+"/"+wzRisk+" risked";
       document.getElementById("h2h-n").textContent=h2hC+"-"+h2hW;
     } else {
