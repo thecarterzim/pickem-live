@@ -106,6 +106,13 @@ h2{font:600 11px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,
 .nmc.lv{border-style:dashed;border-color:currentColor}
 .nmc.me{border:1.5px solid var(--me)} .nmc.rival{border:1.5px solid var(--rival)}
 .nmc b{font-size:10px;opacity:.8;margin-left:3px}
+.segwrap{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:-4px 0 4px}
+.seg{display:inline-flex;padding:3px;border-radius:99px;background:var(--soft);border:1px solid var(--line)}
+.seg button{font:600 12.5px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;padding:7px 13px;border:0;border-radius:99px;background:transparent;color:var(--muted);cursor:pointer;display:inline-flex;align-items:center}
+.seg button[aria-checked="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.18)}
+.seg button:focus-visible{outline:2px solid var(--rival);outline-offset:1px}
+.seg .ldot{margin-left:6px;width:7px;height:7px}
+.segnote{font-size:12.5px;color:var(--muted)}
 .legend{font-size:12.5px;color:var(--muted);margin-top:8px}
 footer{margin-top:28px;font-size:12.5px;color:var(--muted);max-width:62ch}
 @media (max-width:480px){.prow,.bhead{grid-template-columns:24px 1fr 56px 38px 16px;gap:6px}.picks{padding-left:12px}h1{font-size:20px}}
@@ -238,11 +245,12 @@ function seasonView(){
   const me = S.find(s => s.name === ME), riv = S.find(s => s.name.startsWith(RIV));
   const wr = n => 1 + S.filter(x => x.total_w > n.total_w).length, pr = n => 1 + S.filter(x => x.total_pts > n.total_pts).length;
   const lbl = proj ? 'wins / pts if live games hold' : 'wins / pts';
-  let h = `${LIVEW ? `<div class="tabs" role="tablist" style="margin-top:0">${['current', 'projected'].map(m => `<button class="tab smode" role="tab" data-m="${m}" aria-selected="${SMODE === m}">${m === 'current' ? 'Current' : `Projected <span class="ldot"></span>`}</button>`).join('')}</div>` : ''}
+  let h = `
   <div class="hero">
     <div class="stat me"><div class="k">You · ${lbl}</div><div class="v">${me.total_w} / ${me.total_pts}</div><div class="d">${ord(wr(me))} in wins · ${ord(pr(me))} in points</div></div>
     ${riv ? `<div class="stat rival"><div class="k">Walker · ${lbl}</div><div class="v">${riv.total_w} / ${riv.total_pts}</div><div class="d">${ord(wr(riv))} in wins · ${ord(pr(riv))} in points</div></div>` : ''}
-  </div>`;
+  </div>
+  ${LIVEW ? `<div class="segwrap"><div class="seg" role="radiogroup" aria-label="Season totals">${['current', 'projected'].map(m => `<button class="smode" role="radio" data-m="${m}" aria-checked="${SMODE === m}">${m === 'current' ? 'Current' : 'Projected<span class="ldot"></span>'}</button>`).join('')}</div><span class="segnote">${proj ? `Week ${LIVEW.week} live games counted as if they hold` : 'Finished games only'}</span></div>` : ''}`;
   return h + table('total_w', 'wins', 2, proj ? 'Projected wins race' : 'Season wins race') + table('total_pts', 'pts', 4, proj ? 'Projected points race' : 'Season points race') +
     `<div class="legend">${LIVEW ? (proj ? `Projected = finished games plus week ${LIVEW.week}'s games in progress as if the current scores hold (updates every 30s). ` : `Current counts only finished games; week ${LIVEW.week} is still in progress. `) : ''}Green line = payout cut (top 2 in wins, top 4 in points). Ties share a rank.</div>`;
 }
