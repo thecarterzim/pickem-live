@@ -149,11 +149,12 @@ footer{margin-top:28px;font-size:12.5px;color:var(--muted);max-width:62ch}
 .hqn a.t{display:inline-block;color:#67707A;text-decoration:none;padding:8px 10px;border-radius:8px;white-space:nowrap;border:0;font:600 14px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;letter-spacing:0;text-transform:none}
 .hqn a.t:hover{background:#F0EFEC;color:#1B1F24}
 .hqn a.t.on{background:#1B1F24;color:#FAFAF9}
+.hqn a.t[hidden]{display:none}
 .hqn a:focus-visible{outline:2px solid #1D4ED8;outline-offset:2px}
 @media (max-width:480px){.hqn-brand{display:none}.hqn-in{justify-content:space-between;gap:2px}.hqn a.t{flex:1;text-align:center;padding:9px 4px;font-size:13.5px}}
 @media (prefers-color-scheme:dark){.hqn{background:rgba(19,21,25,.92);border-color:#2A2E35}.hqn-brand{color:#E8EAED}.hqn-brand span{color:#2EA366}
   .hqn a.t{color:#9AA3AD}.hqn a.t:hover{background:#22262D;color:#E8EAED}.hqn a.t.on{background:#E8EAED;color:#131519}}
-</style><div class="hqn" role="navigation" aria-label="Pick'em pages"><div class="hqn-in"><a class="hqn-brand" href="index.html">PICK<span>&rsquo;</span>EM</a><a class="t" href="index.html">Home</a><a class="t" href="war-room.html">War Room</a><a class="t on" href="scoreboard.html" aria-current="page">Pool</a><a class="t" href="live.html">Live</a></div></div><div class="wrap">
+</style><div class="hqn" role="navigation" aria-label="Pick'em pages"><div class="hqn-in"><a class="hqn-brand" href="index.html">PICK<span>&rsquo;</span>EM</a><a class="t" href="index.html">Home</a><a class="t" href="war-room.html">War Room</a><a class="t on" href="scoreboard.html" aria-current="page">Pool</a><a class="t" href="live.html">Live</a><a class="t" id="hqn-crowd" href="scoreboard.html#crowd" hidden>Crowd</a><script>try{if(localStorage.getItem("crowdKey")||(/scoreboard[.]html$/.test(location.pathname)&&location.hash==="#crowd"))document.getElementById("hqn-crowd").hidden=false}catch(e){}</script></div></div><div class="wrap">
 <header><div><h1>Pick'em Pool Board</h1><div class="sub" id="sub"></div></div></header>
 <div class="tabs" role="tablist" id="tabs"></div>
 <main id="view"></main>
@@ -414,16 +415,21 @@ function show(id, keep){
   if (open) document.querySelectorAll('.prow').forEach(r => { if (open.includes(r.querySelector('.nm').firstChild.textContent)) r.click(); });
   else { const me = document.querySelector('.prow.me'); if (me) { me.click(); } }
   if (location.hash.slice(1) !== v.id) history.replaceState(null, '', '#' + v.id);
+  // Crowd is a top-level nav item (shared nav injected at publish): light it instead of Pool while it's open.
+  const nc = document.getElementById('hqn-crowd'), np = document.querySelector('.hqn a.t[href="scoreboard.html"]');
+  if (nc) { if (v.id === 'crowd' || D.crowd) nc.hidden = false; nc.classList.toggle('on', v.id === 'crowd'); }
+  if (np) np.classList.toggle('on', v.id !== 'crowd');
+  document.getElementById('tabs').hidden = v.id === 'crowd';
 }
-// The Crowd tab stays hidden unless this device has unlocked it before or the link goes straight to #crowd.
+// Crowd isn't one of these tabs: it's reached from the top nav (shown only on devices that unlocked it) or #crowd.
 let savedKey = null; try { savedKey = localStorage.getItem('crowdKey'); } catch (e) {}
-const crowdOn = D.crowd_enc && (savedKey || location.hash === '#crowd');
-if (!crowdOn) views.splice(views.findIndex(v => v.id === 'crowd'), 1);
-document.getElementById('tabs').innerHTML = views.map(v => `<button class="tab" role="tab" data-id="${v.id}">${v.label}</button>`).join('');
+if (!D.crowd_enc) views.splice(views.findIndex(v => v.id === 'crowd'), 1);
+document.getElementById('tabs').innerHTML = views.filter(v => v.id !== 'crowd').map(v => `<button class="tab" role="tab" data-id="${v.id}">${v.label}</button>`).join('');
 document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => show(t.dataset.id)));
 document.getElementById('sub').textContent = `${D.season} season · updated ${D.updated}`;
 show(location.hash.slice(1));
-if (crowdOn && savedKey) unlockCrowd(null, savedKey).then(() => { if (CUR === 'crowd') show('crowd'); })
+addEventListener('hashchange', () => { if (location.hash.slice(1) !== CUR) show(location.hash.slice(1)); });
+if (D.crowd_enc && savedKey) unlockCrowd(null, savedKey).then(() => { if (CUR === 'crowd') show('crowd'); })
   .catch(() => { try { localStorage.removeItem('crowdKey'); } catch (e) {} });   // password changed: ask again
 if (LIVEW) { liveTick(); setInterval(liveTick, 30000); }
 </script>

@@ -152,11 +152,12 @@ svg text{font:11px -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif
 .hqn a.t{display:inline-block;color:#67707A;text-decoration:none;padding:8px 10px;border-radius:8px;white-space:nowrap;border:0;font:600 14px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;letter-spacing:0;text-transform:none}
 .hqn a.t:hover{background:#F0EFEC;color:#1B1F24}
 .hqn a.t.on{background:#1B1F24;color:#FAFAF9}
+.hqn a.t[hidden]{display:none}
 .hqn a:focus-visible{outline:2px solid #1D4ED8;outline-offset:2px}
 @media (max-width:480px){.hqn-brand{display:none}.hqn-in{justify-content:space-between;gap:2px}.hqn a.t{flex:1;text-align:center;padding:9px 4px;font-size:13.5px}}
 @media (prefers-color-scheme:dark){.hqn{background:rgba(19,21,25,.92);border-color:#2A2E35}.hqn-brand{color:#E8EAED}.hqn-brand span{color:#2EA366}
   .hqn a.t{color:#9AA3AD}.hqn a.t:hover{background:#22262D;color:#E8EAED}.hqn a.t.on{background:#E8EAED;color:#131519}}
-</style><div class="hqn" role="navigation" aria-label="Pick'em pages"><div class="hqn-in"><a class="hqn-brand" href="index.html">PICK<span>&rsquo;</span>EM</a><a class="t" href="index.html">Home</a><a class="t on" href="war-room.html" aria-current="page">War Room</a><a class="t" href="scoreboard.html">Pool</a><a class="t" href="live.html">Live</a></div></div><div class="wrap">
+</style><div class="hqn" role="navigation" aria-label="Pick'em pages"><div class="hqn-in"><a class="hqn-brand" href="index.html">PICK<span>&rsquo;</span>EM</a><a class="t" href="index.html">Home</a><a class="t on" href="war-room.html" aria-current="page">War Room</a><a class="t" href="scoreboard.html">Pool</a><a class="t" href="live.html">Live</a><a class="t" id="hqn-crowd" href="scoreboard.html#crowd" hidden>Crowd</a><script>try{if(localStorage.getItem("crowdKey")||(/scoreboard[.]html$/.test(location.pathname)&&location.hash==="#crowd"))document.getElementById("hqn-crowd").hidden=false}catch(e){}</script></div></div><div class="wrap">
 <header>
   <h1>Pick&rsquo;em War Room</h1>
   <div class="sub" id="subtitle">updated Oct 04, 2026</div>
