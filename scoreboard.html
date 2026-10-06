@@ -207,27 +207,48 @@ function weekView(w){
   return h + `</div><div class="legend">${w.live ? 'Live: records count games in progress as if the current score holds (dashed chips). Alive = can still reach the leader\'s locked-in wins. Refreshes every 30s. ' : ''}Bar = share of the pool on the favorite; green when the favorite covered, red when the dog did. Names: green = hit, red = missed; numbers are points, TB = tiebreaker; gold outline = you, blue = Walker.</div>`;
 }
 
+const SEASON_WEEKS = 18;
+let SMODE = 'current';
+function seasonRows(mode){
+  // Current = finished games only (the live week counts only its final games).
+  // Projected = full-season pace: if-held totals scaled from the weeks played so far to SEASON_WEEKS.
+  const live = LIVEW, frac = live ? live.games.filter(g => g.status === 'final' || g.status === 'live').length / live.games.length : 0;
+  const played = D.weeks.filter(w => w !== live).length + frac;
+  return D.standings.map(s => {
+    const wins = [], pts = [];
+    D.weeks.forEach((w, i) => {
+      const p = w.players.find(x => x.name === s.name);
+      if (w === live && p) { wins.push(mode === 'current' ? p.lockw : p.w); pts.push(mode === 'current' ? p.lockpts : p.pts_won); }
+      else { wins.push(s.wins[i]); pts.push(s.pts[i]); }
+    });
+    const tw = wins.reduce((x, y) => x + y, 0), tp = pts.reduce((x, y) => x + y, 0), k = played ? SEASON_WEEKS / played : 0;
+    return {name: s.name, wins, pts, now_w: tw, now_pts: tp,
+            total_w: mode === 'current' ? tw : Math.round(tw * k), total_pts: mode === 'current' ? tp : Math.round(tp * k)};
+  });
+}
 function seasonView(){
-  const S = D.standings.slice(), wk = D.weeks.map(w => w.week);
-  const table = (key, perKey, cut, label) => {
-    const rows = S.slice().sort((a, b) => b[key] - a[key] || a.name.localeCompare(b.name));
-    let t = `<h2>${label}</h2><div class="board tscroll"><table class="tbl"><thead><tr><th>#</th><th>Player</th>${wk.map(w => `<th>W${w}</th>`).join('')}<th>Total</th></tr></thead><tbody>`;
+  const proj = SMODE === 'projected', S = seasonRows(SMODE), wk = D.weeks.map(w => w.week);
+  const table = (key, perKey, nowKey, cut, label) => {
+    const rows = S.slice().sort((a, b) => b[key] - a[key] || b[nowKey] - a[nowKey] || a.name.localeCompare(b.name));
+    let t = `<h2>${label}</h2><div class="board tscroll"><table class="tbl"><thead><tr><th>#</th><th>Player</th>${wk.map(w => `<th>W${w}${LIVEW && LIVEW.week === w ? '<span class="ldot"></span>' : ''}</th>`).join('')}${proj ? '<th>Now</th><th>Proj</th>' : '<th>Total</th>'}</tr></thead><tbody>`;
     rows.forEach((r, i) => {
       const rk = 1 + rows.filter(x => x[key] > r[key]).length;
       const inMoney = rk <= cut;
       const cutRow = i > 0 && (1 + rows.filter(x => x[key] > rows[i-1][key]).length) <= cut && !inMoney;
-      t += `<tr class="${cls(r.name)} ${cutRow ? 'cut' : ''}"><td class="r">${rk}</td><td class="n">${esc(r.name)}${tagOf(r.name)}${inMoney ? '<span class="tag money">Paying</span>' : ''}</td>${r[perKey].map(v => `<td>${v}</td>`).join('')}<td class="t">${r[key]}</td></tr>`;
+      t += `<tr class="${cls(r.name)} ${cutRow ? 'cut' : ''}"><td class="r">${rk}</td><td class="n">${esc(r.name)}${tagOf(r.name)}${inMoney ? `<span class="tag money">${proj ? 'On pace' : 'Paying'}</span>` : ''}</td>${r[perKey].map(v => `<td>${v}</td>`).join('')}${proj ? `<td>${r[nowKey]}</td>` : ''}<td class="t">${r[key]}</td></tr>`;
     });
     return t + `</tbody></table></div>`;
   };
   const me = S.find(s => s.name === ME), riv = S.find(s => s.name.startsWith(RIV));
   const wr = n => 1 + S.filter(x => x.total_w > n.total_w).length, pr = n => 1 + S.filter(x => x.total_pts > n.total_pts).length;
-  let h = `<div class="hero">
-    <div class="stat me"><div class="k">You · wins / pts</div><div class="v">${me.total_w} / ${me.total_pts}</div><div class="d">${ord(wr(me))} in wins · ${ord(pr(me))} in points</div></div>
-    ${riv ? `<div class="stat rival"><div class="k">Walker · wins / pts</div><div class="v">${riv.total_w} / ${riv.total_pts}</div><div class="d">${ord(wr(riv))} in wins · ${ord(pr(riv))} in points</div></div>` : ''}
+  const lbl = proj ? `projected over ${SEASON_WEEKS} wks` : 'wins / pts';
+  let h = `<div class="tabs" role="tablist" style="margin-top:0">${['current', 'projected'].map(m => `<button class="tab smode" role="tab" data-m="${m}" aria-selected="${SMODE === m}">${m === 'current' ? 'Current' : 'Projected'}</button>`).join('')}</div>
+  <div class="hero">
+    <div class="stat me"><div class="k">You · ${lbl}</div><div class="v">${me.total_w} / ${me.total_pts}</div><div class="d">${ord(wr(me))} in wins · ${ord(pr(me))} in points</div></div>
+    ${riv ? `<div class="stat rival"><div class="k">Walker · ${lbl}</div><div class="v">${riv.total_w} / ${riv.total_pts}</div><div class="d">${ord(wr(riv))} in wins · ${ord(pr(riv))} in points</div></div>` : ''}
   </div>`;
-  return h + table('total_w', 'wins', 2, 'Season wins race') + table('total_pts', 'pts', 4, 'Season points race') +
-    `<div class="legend">Green line = payout cut (top 2 in wins, top 4 in points). Ties share a rank.</div>`;
+  return h + table('total_w', 'wins', 'now_w', 2, proj ? 'Projected wins race' : 'Season wins race') + table('total_pts', 'pts', 'now_pts', 4, proj ? 'Projected points race' : 'Season points race') +
+    `<div class="legend">${proj ? `Projected = each player's season so far (live week as if current scores hold) scaled to a ${SEASON_WEEKS}-week pace. ` : (LIVEW ? `Current counts only finished games; week ${LIVEW.week} is still in progress. ` : '')}Green line = payout cut (top 2 in wins, top 4 in points). Ties share a rank.</div>`;
 }
 
 const ALIAS = {WSH:'WAS', LAR:'LA', JAC:'JAX'};
@@ -236,15 +257,15 @@ if (LIVEW) { LIVEW.live = true; regrade(LIVEW); }
 const liveNote = p => p ? ` · ${p.left ? p.left + ' left, max ' + p.maxw : 'done'}${p.alive ? '' : ' · out'}` : '';
 function regrade(w){
   for (const p of w.players){
-    let W = 0, L = 0, Pu = 0, pts = 0, tbw = 0, lockw = 0, left = 0;
+    let W = 0, L = 0, Pu = 0, pts = 0, tbw = 0, lockw = 0, lockpts = 0, left = 0;
     w.games.forEach((g, j) => { const k = p.picks[j]; if (!k.team) return;
       k.lv = g.status === 'live';
       if (!g.ats) { k.res = 'pending'; left++; return; }
       if (k.lv) left++;
       if (g.ats === 'PUSH') { k.res = 'push'; Pu++; }
-      else if (k.team === g.ats) { k.res = 'win'; W++; pts += k.pts; tbw += k.tb; if (!k.lv) lockw++; }
+      else if (k.team === g.ats) { k.res = 'win'; W++; pts += k.pts; tbw += k.tb; if (!k.lv) { lockw++; lockpts += k.pts; } }
       else { k.res = 'loss'; L++; } });
-    Object.assign(p, {w: W, l: L, push: Pu, pts_won: pts, tb_wins: tbw, lockw, left, maxw: lockw + left});
+    Object.assign(p, {w: W, l: L, push: Pu, pts_won: pts, tb_wins: tbw, lockw, lockpts, left, maxw: lockw + left});
   }
   for (const p of w.players) p.alive = p.maxw >= Math.max(...w.players.filter(x => x !== p).map(x => x.lockw));
   w.players.sort((a, b) => b.w - a.w || b.tb_wins - a.tb_wins || (a.mnp_diff ?? 999) - (b.mnp_diff ?? 999) || b.pts_won - a.pts_won);
@@ -270,7 +291,7 @@ async function liveTick(){
     w.upd = 'Live · updated ' + new Date().toLocaleTimeString([], {hour: 'numeric', minute: '2-digit', second: '2-digit'}) + ' · every 30s';
   } catch (ex) { w.upd = 'Live score fetch failed — retrying in 30s'; }
   regrade(w);
-  if (CUR === 'w' + w.week) show(CUR, true);
+  if (CUR === 'w' + w.week || CUR === 'season') show(CUR, true);
 }
 let CUR = null;
 const views = [...D.weeks.map(w => ({id: 'w' + w.week, label: 'Week ' + w.week + (w.live ? '<span class="ldot" aria-label="live"></span>' : ''), render: () => weekView(w)})), {id: 'season', label: 'Season', render: seasonView}];
@@ -278,12 +299,13 @@ function show(id, keep){
   const v = views.find(x => x.id === id) || views[views.length - 2];
   const open = keep ? [...document.querySelectorAll('.prow[aria-expanded="true"] .nm')].map(n => n.firstChild.textContent) : null;
   CUR = v.id;
-  document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', t.dataset.id === v.id));
+  document.querySelectorAll('#tabs .tab').forEach(t => t.setAttribute('aria-selected', t.dataset.id === v.id));
   document.getElementById('view').innerHTML = v.render();
   document.querySelectorAll('.prow').forEach(r => {
     const tog = () => { const el = r.nextElementSibling; const o = !el.classList.contains('open'); el.classList.toggle('open', o); r.setAttribute('aria-expanded', o); };
     r.addEventListener('click', tog); r.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); tog(); } });
   });
+  document.querySelectorAll('.smode').forEach(b => b.addEventListener('click', () => { SMODE = b.dataset.m; show('season', true); }));
   if (open) document.querySelectorAll('.prow').forEach(r => { if (open.includes(r.querySelector('.nm').firstChild.textContent)) r.click(); });
   else { const me = document.querySelector('.prow.me'); if (me) { me.click(); } }
   if (location.hash.slice(1) !== v.id) history.replaceState(null, '', '#' + v.id);
