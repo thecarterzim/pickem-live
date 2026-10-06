@@ -94,6 +94,18 @@ h2{font:600 11px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,
 .tag.out{background:var(--loss-bg);color:var(--loss)} .tag.alive{background:var(--win-bg);color:var(--win)}
 .livebar{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted);margin:-4px 0 12px}
 .gstat{font-size:12px;color:var(--muted);margin-top:3px} .gstat.on{color:#DC2626;font-weight:600}
+.prec{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px;font-size:12.5px;color:var(--muted)}
+.prec b{color:var(--ink);font-variant-numeric:tabular-nums}
+.badge{font:700 10.5px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;letter-spacing:.06em;text-transform:uppercase;padding:3px 7px;border-radius:99px}
+.badge.sweep{background:var(--win-bg);color:var(--win)} .badge.wipe{background:var(--loss-bg);color:var(--loss)}
+.sides{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+.side .sh{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.names{display:flex;flex-wrap:wrap;gap:4px}
+.nmc{font:600 11.5px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;padding:4px 6px;border-radius:6px;background:var(--push-bg);color:var(--push);border:1px solid transparent}
+.nmc.win{background:var(--win-bg);color:var(--win)} .nmc.loss{background:var(--loss-bg);color:var(--loss)}
+.nmc.lv{border-style:dashed;border-color:currentColor}
+.nmc.me{border:1.5px solid var(--me)} .nmc.rival{border:1.5px solid var(--rival)}
+.nmc b{font-size:10px;opacity:.8;margin-left:3px}
 .legend{font-size:12.5px;color:var(--muted);margin-top:8px}
 footer{margin-top:28px;font-size:12.5px;color:var(--muted);max-width:62ch}
 @media (max-width:480px){.prow,.bhead{grid-template-columns:24px 1fr 56px 38px 16px;gap:6px}.picks{padding-left:12px}h1{font-size:20px}}
@@ -159,7 +171,11 @@ function weekView(w){
         return `<span class="chip ${k.res}${k.lv ? ' lv' : ''}">${k.team} ${line}${k.pts ? `<b>${k.pts}pt</b>` : ''}${k.tb ? '<b>TB</b>' : ''}</span>`; }).join('')}
       ${p.mnp != null ? `<div class="mnp">MNF total guess ${p.mnp}${w.mnf_total != null ? ` (actual ${w.mnf_total})` : ''}</div>` : ''}</div>`;
   });
-  h += `</div><h2>Games</h2><div class="games">`;
+  const short = n => n.split(/\s*-\s*/)[0];
+  let poolW = 0, poolL = 0;
+  w.games.forEach((g, j) => { if (!g.ats || g.ats === 'PUSH') return;
+    for (const p of P) { const t = p.picks[j].team; if (t) t === g.ats ? poolW++ : poolL++; } });
+  h += `</div><h2>Games${poolW + poolL ? ` · pool ${poolW}-${poolL}${w.live ? ' if held' : ''}` : ''}</h2><div class="games">`;
   w.games.forEach((g, j) => {
     const onFav = P.filter(p => p.picks[j].team === g.fav).length, onDog = P.filter(p => p.picks[j].team === g.dog).length, tot = onFav + onDog;
     const score = (g.status === 'final' || g.status === 'live')
@@ -173,9 +189,22 @@ function weekView(w){
     h += `<div class="game"><div class="gtop"><span class="score">${score}</span><span class="cov">${g.fav} -${g.line} · ${cov}</span></div>
       ${w.live && g.det ? `<div class="gstat ${g.status === 'live' ? 'on' : ''}">${g.status === 'live' ? '● ' : ''}${esc(g.det)}</div>` : ''}
       ${tot ? `<div class="split"><span>${g.fav} ${onFav}</span><span class="bar"><i class="${g.ats ? (favFirst ? 'c' : 'x') : ''}" style="width:${100*onFav/tot}%;${g.ats ? '' : 'background:var(--muted)'}"></i></span><span>${onDog} ${g.dog}</span></div>` : ''}
+      ${tot ? (() => {
+        const on = t => P.filter(p => p.picks[j].team === t);
+        const hit = g.ats && g.ats !== 'PUSH' ? on(g.ats).length : 0, miss = g.ats && g.ats !== 'PUSH' ? tot - hit : 0;
+        const live = g.status === 'live';
+        const rec = !g.ats ? `<span>${tot} picks · not started</span>`
+          : g.ats === 'PUSH' ? `<span>Pool <b>0-0-${tot}</b> · push</span>`
+          : `<span>Pool <b>${hit}-${miss}</b>${live ? ' if held' : ''} · ${Math.round(100 * hit / tot)}% hit</span>`
+            + (g.ats && !live && miss === 0 ? '<span class="badge sweep">Everyone hit</span>' : '')
+            + (g.ats && !live && hit === 0 ? '<span class="badge wipe">Everyone missed</span>' : '');
+        const col = t => { const L = on(t); return `<div class="side"><div class="sh">${t} ${t === g.fav ? '-' : '+'}${g.line} · ${L.length}</div><div class="names">${
+          L.map(p => { const k = p.picks[j];
+            return `<span class="nmc ${k.res} ${k.lv ? 'lv' : ''} ${cls(p.name)}" title="${esc(p.name)}">${esc(short(p.name))}${k.pts ? `<b>${k.pts}</b>` : ''}${k.tb ? '<b>TB</b>' : ''}</span>`; }).join('') || '<span class="nmc">nobody</span>'}</div></div>`; };
+        return `<div class="prec">${rec}</div><div class="sides">${col(g.fav)}${col(g.dog)}</div>`; })() : ''}
       <div class="who">${mark(me, 'me')}${riv ? mark(riv, 'rival') : ''}</div></div>`;
   });
-  return h + `</div><div class="legend">${w.live ? 'Live: records count games in progress as if the current score holds (dashed chips). Alive = can still reach the leader\'s locked-in wins. Refreshes every 30s. ' : ''}Bar = share of the pool on the favorite; green when the favorite covered, red when the dog did.</div>`;
+  return h + `</div><div class="legend">${w.live ? 'Live: records count games in progress as if the current score holds (dashed chips). Alive = can still reach the leader\'s locked-in wins. Refreshes every 30s. ' : ''}Bar = share of the pool on the favorite; green when the favorite covered, red when the dog did. Names: green = hit, red = missed; numbers are points, TB = tiebreaker; gold outline = you, blue = Walker.</div>`;
 }
 
 function seasonView(){
